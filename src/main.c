@@ -415,7 +415,7 @@ uint64_t * mcr_count(MCR *mcr, int mx, int mz, size_t max) {
                     if (options.bounds || options.find) {
                         int bx = (i / (128*16)) + (16*x) + (32*16*mx);
                         int by = (i % 128);
-                        int bz = ((i / 128) % (128*16)) - (i%128) + (16*z) + (32*16*mz);
+                        int bz = (((i % (128 * 16)) - by) / 128) + (16*z) + (32*16*mz);
                         
                         if (options.bounds) {
                             if (bx < options.bounds[0] || bx > options.bounds[1] ||
