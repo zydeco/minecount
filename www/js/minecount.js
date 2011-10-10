@@ -319,6 +319,7 @@ blockNames = {
 //////////////////////////////////
 
 $(document).ready(function pageready() {
+  parse_url();
   minecount_main();
 });
 
@@ -337,14 +338,32 @@ function hashChanged() {
   minecount_load(document.location.hash.substring(1));
 }
 
+function parse_url() {
+  var vars = [];
+  var start = document.location.href.indexOf('?');
+  var end = document.location.href.indexOf('#');
+  if (end == -1) end = document.location.href.length;
+  if (start > -1) {
+    var args =  document.location.href.slice(start + 1, end).split('&');
+    for (var i in args) {
+      if (args[i].indexOf('=') == -1) continue;
+      var name = args[i].slice(0, args[i].indexOf('='));
+      var val = args[i].slice(args[i].indexOf('=')+1);
+      vars[name] = val;
+    }
+  }
+  
+  if ('file' in vars)
+    document.location.href = document.location.href.slice(0, start) + '#' + vars.file;
+}
+
 function minecount_main() {
   // listen for hash changes
-  if (false && "onhashchange" in window) { // event supported?
+  if ("onhashchange" in window) { // event supported?
     window.onhashchange = function () {
       hashChanged();
     }
-  }
-  else { // event not supported:
+  } else { // event not supported:
     var storedHash = document.location.hash;
     window.setInterval(function () {
       if (document.location.hash == storedHash) return;
@@ -367,7 +386,7 @@ function minecount_main() {
       minecount_load(document.location.hash.substring(1));
     },
     error: function(jqXHR, textStatus, errorThrown) {
-      alert('could not load file list');
+      $('#status').text('could not load file list');
     }
   });
 }
@@ -422,6 +441,7 @@ function minecount_load(path) {
 
   // check path
   var pc = path.split('/');
+  if (pc.length >= 1 && !(pc[0] in worlds)) return minecount_load_last(defaultWorld); 
   if (pc.length == 1) return minecount_load_last(pc[0]);
   if (pc.length != 2) return minecount_load_last(defaultWorld);
   var idx = worlds[pc[0]]['files'].indexOf(pc[1]);
@@ -520,9 +540,6 @@ function minecount_show(world, file, count, prevCount) {
 
   // update hash without triggering a hash change event
   document.location.hash = lastHash = '#'+world+'/'+file;
-
-  // update calendar
-
 }
 
 function parseMyDate(text) {
