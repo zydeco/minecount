@@ -12,7 +12,8 @@
 #define DSLAB_BYDATA    (BYDATA_BASE+96)
 #define GRASS_BYDATA    (BYDATA_BASE+112)
 #define STNBRICK_BYDATA (BYDATA_BASE+128)
-#define BYDATA_END      (BYDATA_BASE+144)
+#define LEAVES_BYDATA   (BYDATA_BASE+144)
+#define BYDATA_END      (BYDATA_BASE+160)
 
 #define ID_WOOL         35
 #define ID_DYE          351
@@ -23,6 +24,7 @@
 #define ID_DSLAB        43
 #define ID_TALL_GRASS   31
 #define ID_STONE_BRICK  98
+#define ID_LEAVES       18
 
 // returns true if an item id must be stored with data too
 static inline bool has_data(int16_t item) {
@@ -36,6 +38,7 @@ static inline bool has_data(int16_t item) {
         case ID_DSLAB:
         case ID_TALL_GRASS:
         case ID_STONE_BRICK:
+        case ID_LEAVES:
             return true;
         default:
             return false;
@@ -57,6 +60,7 @@ static inline int data_id_get_data(int i) {
 static inline int data_id_get_item(int i) {
     if (!is_data(i)) return 0;
     // compare in reverse order, big ones first
+    if (i >= LEAVES_BYDATA) return ID_LEAVES;
     if (i >= STNBRICK_BYDATA) return ID_STONE_BRICK;
     if (i >= GRASS_BYDATA) return ID_TALL_GRASS;
     if (i >= DSLAB_BYDATA) return ID_DSLAB;
@@ -98,6 +102,9 @@ static inline int item_data_id(int16_t item, int data) {
         case ID_STONE_BRICK:
             data &= 3;
             return STNBRICK_BYDATA + (data < 3? data : 0);
+        case ID_LEAVES:
+            data &= 3;
+            return LEAVES_BYDATA + (data < 3? data : 0);
         default:
             return BYDATA_END;
     }
