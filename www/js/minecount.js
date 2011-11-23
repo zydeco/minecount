@@ -169,6 +169,7 @@ blockNames = {
   "119":"End Portal",
   "120":"End Portal Frame",
   "121":"White Stone",
+  "122":"Dragon Egg",
   "256":"Iron Shovel",
   "257":"Iron Pickaxe",
   "258":"Iron Axe",
