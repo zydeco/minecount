@@ -389,20 +389,29 @@ function minecount_main() {
   lastHash = document.location.hash;
 
   // load filelist
-  $.ajax({
-    url: fileList,
-    dataType: 'json',
-    success: function(res, status, jqXHR) {
-      worlds = res.worlds;
-      for(var w in worlds) computeDates(worlds[w]);
-      fileBase = res.base;
-      setupCalendar();
-      minecount_load(document.location.hash.substring(1));
-    },
-    error: function(jqXHR, textStatus, errorThrown) {
-      $('#status').text('could not load file list');
-    }
-  });
+  if (typeof(fileList) == 'object') {
+    loadFileList(fileList);
+    minecount_load(document.location.hash.substring(1));
+  } else if (typeof(fileList) == 'string') {
+    $.ajax({
+      url: fileList,
+      dataType: 'json',
+      success: function(res, status, jqXHR) {
+        loadFileList(res);
+        minecount_load(document.location.hash.substring(1));
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        $('#status').text('could not load file list');
+      }
+    });
+  }
+}
+
+function loadFileList(res) {
+  worlds = res.worlds;
+  for(var w in worlds) computeDates(worlds[w]);
+  fileBase = res.base;
+  setupCalendar();
 }
 
 function setupCalendar() {
