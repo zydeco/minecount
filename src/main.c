@@ -19,7 +19,7 @@
 uint64_t * mcr_count(MCR *mcr, int mx, int mz, size_t max);
 
 #define ITEM_MAX 2267 // last iem +1
-#define VERSION "1.3"
+#define VERSION "1.4"
 #define NTRIES 8
 
 // some evil globals

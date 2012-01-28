@@ -315,6 +315,43 @@ blockNames = {
   "380":"Cauldron",
   "381":"Eye of Ender",
   "382":"Glistering Melon",
+  "383":"Spawn Egg",
+  "383.1":"Spawn Dropped Item",
+  "383.2":"Spawn Experience Orb",
+  "383.10":"Spawn Shot Arrow",
+  "383.11":"Spawn Thrown Snowball",
+  "383.12":"Spawn Ghast Fireball",
+  "383.13":"Spawn Blaze Fireball",
+  "383.14":"Spawn Thrown Ender Pearl",
+  "383.15":"Spawn Thrown Eye of Ender",
+  "383.20":"Spawn Primed TNT",
+  "383.21":"Spawn Falling Block",
+  "383.40":"Spawn Minecart",
+  "383.41":"Spawn Boat",
+  "383.50":"Spawn Creeper",
+  "383.51":"Spawn Skeleton",
+  "383.52":"Spawn Spider",
+  "383.53":"Spawn Giant",
+  "383.54":"Spawn Zombie",
+  "383.55":"Spawn Slime",
+  "383.56":"Spawn Ghast",
+  "383.57":"Spawn Zombie Pigman",
+  "383.58":"Spawn Enderman",
+  "383.59":"Spawn Cave Spider",
+  "383.60":"Spawn Silverfish",
+  "383.61":"Spawn Blaze",
+  "383.62":"Spawn Magma Cube",
+  "383.63":"Spawn Enderdragon",
+  "383.90":"Spawn Pig",
+  "383.91":"Spawn Sheep",
+  "383.92":"Spawn Cow",
+  "383.93":"Spawn Chicken",
+  "383.94":"Spawn Squid",
+  "383.95":"Spawn Wolf",
+  "383.96":"Spawn Mooshroom",
+  "383.97":"Spawn Snow Golem",
+  "383.120":"Spawn Villager",
+  "383.200":"Spawn Ender Crystal",
   "2256":"13 Disc",
   "2257":"Cat Disc",
   "2258":"Blocks Disc",
@@ -326,6 +363,25 @@ blockNames = {
   "2264":"Strad Disc",
   "2265":"Ward Disc",
   "2266":"11 Disc"
+};
+
+blockAlias = {
+    "383.1":"383",
+    "383.2":"383",
+    "383.10":"383",
+    "383.11":"383",
+    "383.12":"383",
+    "383.13":"383",
+    "383.14":"383",
+    "383.15":"383",
+    "383.20":"383",
+    "383.21":"383",
+    "383.40":"383",
+    "383.41":"383",
+    "383.53":"383",
+    "383.63":"383",
+    "383.97":"383",
+    "383.200":"383",
 };
 
 //////////////////////////////////
@@ -583,11 +639,16 @@ function format_percent(count) {
   return n + '%';
 }
 
+function block_img(block, sz) {
+  if (block in blockAlias) block = blockAlias[block];
+  return block + '_' + sz + '.png';
+}
+
 function featured_html(block,showChange) {
   var blockName = blockNames[block.id];
   var blockPercent = format_percent(block.count);
   var change = showChange?change_html(block.count, block.prevCount):'';
-  return '<img src="images/blocks/'+block.id+'_l.png" alt="'+blockName+'" />' +
+  return '<img src="images/blocks/'+block_img(block.id, 'l')+'" alt="'+blockName+'" />' +
   '<h4>'+blockName+'</h4>' +
   (blockPercent?'<span class="percent">'+blockPercent+'</span>':'') +
   '<span class="count">'+block.count+' blocks</span>'+change+'<br/><br/><br/><br/>';
@@ -598,7 +659,7 @@ function block_html(block, showChange) {
   var blockPercent = format_percent(block.count);
   var change = showChange?change_html(block.count, block.prevCount):'';
   return '<div class="block">' +
-  '<img src="images/blocks/'+block.id+'_s.png" alt="'+blockName+'" /><div>'+
+  '<img src="images/blocks/'+block_img(block.id, 's')+'" alt="'+blockName+'" /><div>'+
   '<h4>'+blockName+'</h4>'+
   '<span class="count">'+block.count+'</span>'+change+'<br/>'+
   (blockPercent?'<span class="percent">'+blockPercent+'</span>':'')
