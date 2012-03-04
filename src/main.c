@@ -17,9 +17,10 @@
 // returns an array of max elements with the block count of each ID
 // includes items in chests and dispensers
 uint64_t * mcr_count(MCR *mcr, int mx, int mz, size_t max);
+uint64_t * mca_count(MCR *mcr, int mx, int mz, size_t max);
 
-#define ITEM_MAX 2267 // last iem +1
-#define VERSION "1.4"
+#define ITEM_MAX 4608 // 4096 + space for item+data pairs
+#define VERSION "1.5"
 #define NTRIES 8
 
 // some evil globals
@@ -117,9 +118,10 @@ void* region_count(void *data) {
     
     while ((path = get_next_region_path(&tries))) {
         int rx, rz;
+        char type;
         base = strrchr(path, '/') + 1;
         // get region coords
-        sscanf(base, "r.%d.%d.mcr", &rx, &rz);
+        sscanf(base, "r.%d.%d.mc%c", &rx, &rz, &type);
         // count region
         MCR *mcr = mcr_open(path, O_RDONLY);
         if (mcr == NULL) {
@@ -127,7 +129,17 @@ void* region_count(void *data) {
             free(path);
             return NULL;
         }
-        uint64_t *lcount = mcr_count(mcr, rx, rz, ITEM_MAX);
+        uint64_t *lcount = NULL;
+        switch(type) {
+            case 'a':
+                lcount = mca_count(mcr, rx, rz, ITEM_MAX);
+                break;
+            case 'r':
+                lcount = mcr_count(mcr, rx, rz, ITEM_MAX);
+                break;
+        }
+        
+        // merge count
         if (lcount) {
             printf("%s\n", base);
             mergecount(lcount);
@@ -147,7 +159,7 @@ void* region_count(void *data) {
 
 int print_usage() {
     fprintf(stdout, "minecount "VERSION" - count blocks and items on a minecraft world\n"
-            "Copyright (C) 2011 Jesus A. Alvarez\n"
+            "Copyright (C) 2011-2012 Jesus A. Alvarez\n"
             "usage: minecount -[wciv] [-t threads] [-f find] [-b bounds] world_path output_path\n"
             "\t-w: include world blocks\n"
             "\t-c: include chest/dispenser contents\n"
@@ -284,10 +296,22 @@ int main (int argc, char * const *argv) {
         struct dirent *ent;
         
         chdir("region");
-        region_queue.base = getcwd(NULL, 0);
+        
+        // find mca files
+        char *ext = ".mcr";
         while((ent = readdir(regionDir))) {
-            // skip non-.mcr files
-            if (strcmp(ent->d_name + strlen(ent->d_name) - 4, ".mcr")) continue;
+            if (strcmp(ent->d_name + strlen(ent->d_name) - 4, ".mca") == 0) {
+                ext = ".mca";
+                break;
+            }
+        }
+        
+        // find region files
+        region_queue.base = getcwd(NULL, 0);
+        rewinddir(regionDir);
+        while((ent = readdir(regionDir))) {
+            // skip non-region files
+            if (strcmp(ent->d_name + strlen(ent->d_name) - 4, ext)) continue;
             
             // queue region
             queue_region_file(ent->d_name, NTRIES);
@@ -378,6 +402,20 @@ void output_json(FILE *fp, const uint64_t *count, size_t max, bool all) {
     fprintf(fp, "}");
 }
 
+void count_containers(nbt_node *root, size_t max, uint64_t *blkCnt) {
+    nbt_node *n = nbt_find_by_path(root, ".Level.TileEntities");
+    if (n && n->type == TAG_LIST) {
+        const struct list_head* pos;
+        list_for_each(pos, &n->payload.tag_list.list->entry) {
+            nbt_node *entry = list_entry(pos, struct tag_list, entry)->data;
+            if (entry->type == TAG_COMPOUND) {
+                nbt_node *items = nbt_find_by_path(entry, ".Items");
+                if (items) count_items(items, blkCnt, max);
+            }
+        }
+    }
+}
+
 uint64_t * mcr_count(MCR *mcr, int mx, int mz, size_t max) {
     uint64_t *blkCnt = NULL;
     if (mcr == NULL) return NULL;
@@ -438,19 +476,90 @@ uint64_t * mcr_count(MCR *mcr, int mx, int mz, size_t max) {
         }
         
         // count containers
-        if (options.countContainers) {
-            nbt_node *n = nbt_find_by_path(root, ".Level.TileEntities");
-            if (n && n->type == TAG_LIST) {
-                const struct list_head* pos;
-                list_for_each(pos, &n->payload.tag_list.list->entry) {
-                    nbt_node *entry = list_entry(pos, struct tag_list, entry)->data;
-                    if (entry->type == TAG_COMPOUND) {
-                        nbt_node *items = nbt_find_by_path(entry, ".Items");
-                        if (items) count_items(items, blkCnt, max);
+        if (options.countContainers) count_containers(root, max, blkCnt);
+        
+        nbt_free(root);
+    }
+    
+    return blkCnt;
+}
+
+uint64_t * mca_count(MCR *mcr, int mx, int mz, size_t max) {
+    uint64_t *blkCnt = NULL;
+    if (mcr == NULL) return NULL;
+    blkCnt = calloc(max, sizeof(uint64_t));
+    if (blkCnt == NULL) return NULL;
+    // TODO: skip entire mca if it's out of bounds (check x and z only)
+    
+    // visit all chunks
+    for(int x=0; x<32; x++) for(int z=0; z<32; z++) {
+        nbt_node *root = mcr_chunk_get(mcr,x,z);
+        if (root == NULL) continue;
+        
+        // TODO: skip entire chunk if it's out of bounds (check x and z only)
+        
+        // count blocks
+        if (options.countWorld) {
+            nbt_node *s = nbt_find_by_path(root, ".Level.Sections");
+            const struct list_head* pos;
+            if (s && s->type == TAG_LIST) list_for_each(pos, &s->payload.tag_list.list->entry) {
+                nbt_node *section = list_entry(pos, struct tag_list, entry)->data;
+                if (section->type != TAG_COMPOUND) continue;
+                nbt_node *n = nbt_find_by_path(section, ".Blocks");
+                nbt_node *nn = nbt_find_by_path(section, ".AddBlocks");
+                nbt_node *nd = nbt_find_by_path(section, ".Data");
+                
+                for(int i=0; i < n->payload.tag_byte_array.length; i++) {
+                    int16_t item = n->payload.tag_byte_array.data[i];
+                    int16_t data = nd->payload.tag_byte_array.data[i/2];
+                    unsigned int itemWithData = 0;
+                    if (i%2 == 1) data >>= 4;
+                    
+                    // extended item ID
+                    if (nn && nn->type == TAG_BYTE_ARRAY) {
+                        int16_t add = nn->payload.tag_byte_array.data[i/2];
+                        if (i%2 == 1) add >>= 4;
+                        item += (add & 0x0F) << 8;
                     }
+                    
+                    // item data
+                    if (has_data(item)) {
+                        if (i%2 == 1) data >>= 4;
+                        data &= 0x0F;
+                        itemWithData = item_data_id(item, data);
+                    }
+                    
+                    // block position
+                    if (options.bounds || options.find) {
+                        nbt_node *nsy = nbt_find_by_path(section, ".Y");
+                        int sy = nsy?nsy->payload.tag_byte:-1;
+                        int bx = (i % 16) + (32*16*mx) + (16*x);
+                        int by = (16*sy) + (i / 256);
+                        int bz = ((i%256)/16) + (16*z) + (32*16*mz);
+                        
+                        if (options.bounds) {
+                            if (bx < options.bounds[0] || bx > options.bounds[1] ||
+                                by < options.bounds[2] || by > options.bounds[3] ||
+                                bz < options.bounds[4] || bz > options.bounds[5]) continue;
+                        }
+                        if (options.find) {
+                            if (itemWithData && options.find[itemWithData]) {
+                                fprintf(stdout, "found %u.%u at %d,%d,%d\n", (unsigned)item, data, bx,by,bz);
+                            } else if (options.find[item]) {
+                                fprintf(stdout, "found %u at %d,%d,%d\n", (unsigned)item, bx,by,bz);
+                            }
+                        }
+                    }
+                    
+                    // count
+                    blkCnt[item]++;
+                    if (itemWithData) blkCnt[itemWithData]++;
                 }
             }
         }
+        
+        // count containers
+        if (options.countContainers) count_containers(root, max, blkCnt);
         
         nbt_free(root);
     }

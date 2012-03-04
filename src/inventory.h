@@ -2,7 +2,7 @@
 
 // items that may have data are also stored at a different place, with a combined id+data
 
-#define BYDATA_BASE     1024 // must be multiple of 16
+#define BYDATA_BASE     4096 // must be multiple of 16
 #define WOOL_BYDATA     (BYDATA_BASE)
 #define DYE_BYDATA      (BYDATA_BASE+16)
 #define COAL_BYDATA     (BYDATA_BASE+32)
@@ -62,7 +62,7 @@ static inline int data_id_get_data(int i) {
 
 // returns the item of a combind item+data
 static inline int data_id_get_item(int i) {
-    if (!is_data(i)) return 0;
+    if (!is_data(i)) return i;
     // compare in reverse order, big ones first
     if (i >= SPAWNEGG_BYDATA) return ID_SPAWNEGG;
     if (i >= LEAVES_BYDATA) return ID_LEAVES;
@@ -88,10 +88,9 @@ static inline int item_data_id(int16_t item, int data) {
         case ID_COAL:
             data &= 1;
             return COAL_BYDATA + data;
-            return ID_COAL;
         case ID_WOOD:
             data &= 3;
-            return WOOD_BYDATA + (data < 3 ? data : 0);
+            return WOOD_BYDATA + (data < 4 ? data : 0);
         case ID_SAPLING:
             data &= 3;
             return SAPLING_BYDATA + (data < 3 ? data : 0);
@@ -106,14 +105,14 @@ static inline int item_data_id(int16_t item, int data) {
             return GRASS_BYDATA + (data < 3 ? data : 0);
         case ID_STONE_BRICK:
             data &= 3;
-            return STNBRICK_BYDATA + (data < 3? data : 0);
+            return STNBRICK_BYDATA + (data < 4 ? data : 0);
         case ID_LEAVES:
             data &= 3;
-            return LEAVES_BYDATA + (data < 3? data : 0);
+            return LEAVES_BYDATA + (data < 4 ? data : 0);
         case ID_SPAWNEGG:
             return SPAWNEGG_BYDATA + data;
         default:
-            return BYDATA_END;
+            return item;
     }
 }
 
