@@ -20,7 +20,7 @@ uint64_t * mcr_count(MCR *mcr, int mx, int mz, size_t max);
 uint64_t * mca_count(MCR *mcr, int mx, int mz, size_t max);
 
 #define ITEM_MAX 4608 // 4096 + space for item+data pairs
-#define VERSION "1.5"
+#define VERSION "1.5.1"
 #define NTRIES 8
 
 // some evil globals

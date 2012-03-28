@@ -8,6 +8,10 @@ blockNames = {
   "3":"Dirt",
   "4":"Cobblestone",
   "5":"Wooden Plank",
+  "5.0":"Oak plank",
+  "5.1":"Pine Plank",
+  "5.2":"Birch Plank",
+  "5.3":"Jungle Wood Plank",
   "6":"Sapling",
   "6.0":"Oak Sapling",
   "6.1":"Pine Sapling",
@@ -38,6 +42,9 @@ blockNames = {
   "22":"Lapis Lazuli Block",
   "23":"Dispenser",
   "24":"Sandstone",
+  "24.0":"Sandstone",
+  "24.1":"Hieroglyphic Sandstone",
+  "24.2":"Smooth Sandstone",
   "25":"Note Block",
   "26":"Bed",
   "27":"Powered Rail",
@@ -374,6 +381,8 @@ blockNames = {
 };
 
 blockAlias = {
+    "5.0":"5",
+    "24.0":"24",
     "383.1":"383",
     "383.2":"383",
     "383.10":"383",
@@ -389,7 +398,7 @@ blockAlias = {
     "383.53":"383",
     "383.63":"383",
     "383.97":"383",
-    "393.99":"383",
+    "383.99":"383",
     "383.200":"383",
 };
 
