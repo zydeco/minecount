@@ -9,13 +9,14 @@ blockNames = {
   "4":"Cobblestone",
   "5":"Wooden Plank",
   "5.0":"Oak plank",
-  "5.1":"Pine Plank",
+  "5.1":"Spruce Plank",
   "5.2":"Birch Plank",
   "5.3":"Jungle Wood Plank",
   "6":"Sapling",
   "6.0":"Oak Sapling",
-  "6.1":"Pine Sapling",
+  "6.1":"Spruce Sapling",
   "6.2":"Birch Sapling",
+  "6.3":"Jungle Sapling"
   "7":"Bedrock",
   "8":"Water",
   "9":"Stationary water",
@@ -28,12 +29,12 @@ blockNames = {
   "16":"Coal Ore",
   "17":"Wood",
   "17.0":"Oak Wood",
-  "17.1":"Pine Wood",
+  "17.1":"Spruce Wood",
   "17.2":"Birch Wood",
   "17.3":"Jungle Wood",
   "18":"Leaves",
   "18.0":"Oak Leaves",
-  "18.1":"Pine Leaves",
+  "18.1":"Spruce Leaves",
   "18.2":"Birch Leaves",
   "18.3":"Jungle Leaves",
   "19":"Sponge",
@@ -43,7 +44,7 @@ blockNames = {
   "23":"Dispenser",
   "24":"Sandstone",
   "24.0":"Sandstone",
-  "24.1":"Hieroglyphic Sandstone",
+  "24.1":"Chiseled Sandstone",
   "24.2":"Smooth Sandstone",
   "25":"Note Block",
   "26":"Bed",
@@ -182,6 +183,20 @@ blockNames = {
   "122":"Dragon Egg",
   "123":"Redstone Lamp (off)",
   "124":"Redstone Lamp (on)",
+  "125":"Wooden Double Slab",
+  "125.0":"Oak Wood Double Slab",
+  "125.1":"Spruce Wood Double Slab",
+  "125.2":"Birch Wood Double Slab",
+  "125.3":"Jungle Wood Double Slab",
+  "126":"Wooden Slab",
+  "126.0":"Oak Wood Slab",
+  "126.1":"Spruce Wood Slab",
+  "126.2":"Birch Wood Slab",
+  "126.3":"Jungle Wood Slab",
+  "127":"Cocoa Plant",
+  "128":"Sandstone Stairs",
+  "129":"Emerald Ore",
+  "130":"Ender Chest",
   "256":"Iron Shovel",
   "257":"Iron Pickaxe",
   "258":"Iron Axe",
@@ -367,6 +382,10 @@ blockNames = {
   "383.120":"Spawn Villager",
   "383.200":"Spawn Ender Crystal",
   "384":"Bottle o'Enchanting",
+  "385":"Fire Charge",
+  "386":"Book and Quill",
+  "387":"Written Book",
+  "388":"Emerald",
   "2256":"13 Disc",
   "2257":"Cat Disc",
   "2258":"Blocks Disc",
@@ -657,6 +676,14 @@ function format_percent(count) {
   return n + '%';
 }
 
+function format_count(count) {
+  var parts = (count+'').split('.');
+  var intPart = parts[0];
+  var rgx = /(\d+)(\d{3})/;
+  while (rgx.test(intPart)) intPart = intPart.replace(rgx, '$1,$2');
+  return (parts.length == 2)? intPart + '.' + parts[1] : intPart;
+}
+
 function block_img(block, sz) {
   if (block in blockAlias) block = blockAlias[block];
   return block + '_' + sz + '.png';
@@ -669,7 +696,7 @@ function featured_html(block,showChange) {
   return '<img src="images/blocks/'+block_img(block.id, 'l')+'" alt="'+blockName+'" />' +
   '<h4>'+blockName+'</h4>' +
   (blockPercent?'<span class="percent">'+blockPercent+'</span>':'') +
-  '<span class="count">'+block.count+' blocks</span>'+change+'<br/><br/><br/><br/>';
+  '<span class="count">'+format_count(block.count)+' blocks</span>'+change+'<br/><br/><br/><br/>';
 }
 
 function block_html(block, showChange) {
@@ -679,7 +706,7 @@ function block_html(block, showChange) {
   return '<div class="block">' +
   '<img src="images/blocks/'+block_img(block.id, 's')+'" alt="'+blockName+'" /><div>'+
   '<h4>'+blockName+'</h4>'+
-  '<span class="count">'+block.count+'</span>'+change+'<br/>'+
+  '<span class="count">'+format_count(block.count)+'</span>'+change+'<br/>'+
   (blockPercent?'<span class="percent">'+blockPercent+'</span>':'')
   +'</div></div>';
 }
@@ -690,5 +717,5 @@ function change_html(newCount, oldCount) {
   var changeDir = (newCount>oldCount)?'up':'down';
   var changeSign = (newCount>oldCount)?'▴':'▾';
   var changeDiff = Math.abs(newCount-oldCount);
-  return '<span class="change_'+changeDir+'"> '+changeSign+changeDiff+'</span>'
+  return '<span class="change_'+changeDir+'"> '+changeSign+format_count(changeDiff)+'</span>'
 }

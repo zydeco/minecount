@@ -16,7 +16,9 @@
 #define PLANK_BYDATA    (BYDATA_BASE+160)
 #define SANDSTN_BYDATA  (BYDATA_BASE+176)
 #define SPAWNEGG_BYDATA (BYDATA_BASE+192)
-#define BYDATA_END      (BYDATA_BASE+416)
+#define WSLAB_BYDATA    (BYDATA_BASE+416)
+#define WDSLAB_BYDATA   (BYDATA_BASE+432)
+#define BYDATA_END      (BYDATA_BASE+448)
 
 #define ID_WOOL         35
 #define ID_DYE          351
@@ -31,6 +33,8 @@
 #define ID_PLANK        5
 #define ID_SANDSTONE    24
 #define ID_SPAWNEGG     383
+#define ID_WSLAB        126
+#define ID_WDSLAB       125
 
 // returns true if an item id must be stored with data too
 static inline bool has_data(int16_t item) {
@@ -48,6 +52,8 @@ static inline bool has_data(int16_t item) {
         case ID_PLANK:
         case ID_SANDSTONE:
         case ID_SPAWNEGG:
+        case ID_WSLAB:
+        case ID_WDSLAB:
             return true;
         default:
             return false;
@@ -62,7 +68,7 @@ static inline bool is_data(int i) {
 
 // returns the data of a combind item+data
 static inline int data_id_get_data(int i) {
-    if (i >= SPAWNEGG_BYDATA) return i - SPAWNEGG_BYDATA; // special case, data can be >16
+    if (i >= SPAWNEGG_BYDATA && i < WSLAB_BYDATA) return i - SPAWNEGG_BYDATA; // special case, data can be >16
     return i%16;
 }
 
@@ -70,6 +76,8 @@ static inline int data_id_get_data(int i) {
 static inline int data_id_get_item(int i) {
     if (!is_data(i)) return i;
     // compare in reverse order, big ones first
+    if (i >= WDSLAB_BYDATA) return ID_SPAWNEGG;
+    if (i >= WSLAB_BYDATA) return ID_SPAWNEGG;
     if (i >= SPAWNEGG_BYDATA) return ID_SPAWNEGG;
     if (i >= SANDSTN_BYDATA) return ID_SANDSTONE;
     if (i >= PLANK_BYDATA) return ID_PLANK;
@@ -125,6 +133,12 @@ static inline int item_data_id(int16_t item, int data) {
             return SANDSTN_BYDATA + (data < 3 ? data : 0);
         case ID_SPAWNEGG:
             return SPAWNEGG_BYDATA + data;
+        case ID_WSLAB:
+            data &= 7;
+            return WSLAB_BYDATA + (data < 4 ? data : 0);
+        case ID_WDSLAB:
+            data &= 7;
+            return WDSLAB_BYDATA + (data < 4 ? data : 0);
         default:
             return item;
     }
