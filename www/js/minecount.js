@@ -16,7 +16,7 @@ blockNames = {
   "6.0":"Oak Sapling",
   "6.1":"Spruce Sapling",
   "6.2":"Birch Sapling",
-  "6.3":"Jungle Sapling"
+  "6.3":"Jungle Sapling",
   "7":"Bedrock",
   "8":"Water",
   "9":"Stationary water",
