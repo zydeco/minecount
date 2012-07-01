@@ -20,7 +20,9 @@
 #else
     #include <pthread.h>
     #include <assert.h>
-
+    #include <sys/types.h>
+    #include <sys/sysctl.h>
+    
     typedef pthread_mutex_t mutex_t;
     typedef pthread_t thread_t;
 
@@ -33,6 +35,15 @@
     #define thread_join(t) pthread_join(t, NULL)
     
     static inline int cpu_cores() {
+    #if defined(__APPLE__) && !defined(_SC_NPROCESSORS_ONLN)
+        int count;
+        size_t size=sizeof(count);
+        if (sysctlbyname("hw.ncpu",&count,&size,NULL,0)) return 1;
+        return count;
+    #elif defined(_SC_NPROCESSORS_ONLN)
         return sysconf(_SC_NPROCESSORS_ONLN);
+    #else
+        return 1;
+    #endif
     }
 #endif
