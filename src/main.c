@@ -20,7 +20,7 @@ uint64_t * mcr_count(MCR *mcr, int mx, int mz, size_t max);
 uint64_t * mca_count(MCR *mcr, int mx, int mz, size_t max);
 
 #define ITEM_MAX BYDATA_END
-#define VERSION "1.5.2"
+#define VERSION "1.5.3"
 #define NTRIES 8
 
 // some evil globals
@@ -514,6 +514,7 @@ uint64_t * mca_count(MCR *mcr, int mx, int mz, size_t max) {
                     int16_t data = nd->payload.tag_byte_array.data[i/2];
                     unsigned int itemWithData = 0;
                     if (i%2 == 1) data >>= 4;
+                    data &= 0x0F;
                     
                     // extended item ID
                     if (nn && nn->type == TAG_BYTE_ARRAY) {
@@ -524,8 +525,6 @@ uint64_t * mca_count(MCR *mcr, int mx, int mz, size_t max) {
                     
                     // item data
                     if (has_data(item)) {
-                        if (i%2 == 1) data >>= 4;
-                        data &= 0x0F;
                         itemWithData = item_data_id(item, data);
                     }
                     
