@@ -109,7 +109,7 @@ static inline int item_data_id(int16_t item, int data) {
             return WOOD_BYDATA + (data < 4 ? data : 0);
         case ID_SAPLING:
             data &= 3;
-            return SAPLING_BYDATA + (data < 3 ? data : 0);
+            return SAPLING_BYDATA + (data < 4 ? data : 0);
         case ID_SLAB:
             data &= 7;
             return SLAB_BYDATA + (data < 6 ? data : 0);
