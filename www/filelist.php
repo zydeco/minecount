@@ -4,7 +4,7 @@ $basedir = 'count';
 
 
 function filename_is_json($fn) {
-    return (strrchr($fn, '.') === '.json' && substr($fn, 0, 2) !== '._');
+    return (strrchr($fn, '.') === '.json' && substr($fn, 0, 2) !== '._' && strlen($fn) == 15);
 }
 
 function remove_extension(&$value, $key) {

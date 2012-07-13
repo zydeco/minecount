@@ -1,5 +1,6 @@
 body {
 	background: url(../images/bg.png) repeat #e7e3e3;
+	font-family: 'Helvetica';
 }
 
 #wrapper {
@@ -236,3 +237,48 @@ ul.submenu li a {
 }
 
 ul.menu li:hover ul { display: block; }
+
+/*** GRAPH ***/
+
+#graph {
+	width: 100%;
+	height: 100%;
+	z-index: 100;
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	display:none;
+	background: url(../images/bg.png) repeat #e7e3e3;
+}
+
+.ui-dialog {
+	position:fixed;
+}
+
+#graph_graph {
+	top: 0px;
+	height: 94%;
+	width: 94%;
+	z-index: 100;
+	margin: 3%;
+}
+
+#itemlist_container {
+	height: 240px;
+	overflow-y:scroll;
+	overflow-x:hidden;
+	border: 1px solid silver;
+	background-color: #e6e6e6;
+}
+
+#itemlist li {
+	height: 22px;
+	padding-left: 4px;
+	font-size: 16px;
+	white-space: nowrap;
+}
+
+#itemlist li img {
+	position: relative;
+	top: 2px;
+}

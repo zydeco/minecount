@@ -147,8 +147,8 @@ blockNames = {
   "90":"Portal",
   "91":"Jack-O-Lantern",
   "92":"Cake",
-  "93":"Redstone Repeater",
-  "94":"Redstone Repeater",
+  "93":"Redstone Repeater", // off
+  "94":"Redstone Repeater", // on
   "95":"Locked Chest",
   "96":"Trapdoor",
   "97":"Stone with Silverfish",
@@ -181,8 +181,8 @@ blockNames = {
   "120":"End Portal Frame",
   "121":"White Stone",
   "122":"Dragon Egg",
-  "123":"Redstone Lamp (off)",
-  "124":"Redstone Lamp (on)",
+  "123":"Redstone Lamp", // off
+  "124":"Redstone Lamp", // on
   "125":"Wooden Double Slab",
   "125.0":"Oak Wood Double Slab",
   "125.1":"Spruce Wood Double Slab",
@@ -197,6 +197,12 @@ blockNames = {
   "128":"Sandstone Stairs",
   "129":"Emerald Ore",
   "130":"Ender Chest",
+  "131":"Tripwire Hook",
+  "132":"Tripwire",
+  "133":"Block of Emerald",
+  "134":"Spruce Wood Stairs",
+  "135":"Birch Wood Stairs",
+  "136":"Jungle Wood Stairs",
   "256":"Iron Shovel",
   "257":"Iron Pickaxe",
   "258":"Iron Axe",
@@ -435,6 +441,26 @@ blockAlias = {
 $(document).ready(function pageready() {
   parse_url();
   minecount_main();
+  $.getScript = function(url, callback, cache){
+    $.ajax({
+        type: "GET",
+        url: url,
+        success: callback,
+        dataType: "script",
+        cache: cache
+    });
+  };
+  $(document).keydown(function(e){
+    if (e.which == 71) {
+      // g shows graph
+      minecount_graph();
+    } else if (e.which == 27) {
+      // esc hides graph
+      $('#graph').css('display','none');
+      $('body').css('overflow','auto');
+      $('#graph_ui').dialog('close');
+    }
+  });
 });
 
 function isDateAvailable(w,y,m,d) {
@@ -545,7 +571,6 @@ function setupCalendar() {
       minecount_load(p);
     },
     callbackDelay: 200,
-
   });
 }
 function computeDates(w) {
@@ -556,6 +581,8 @@ function computeDates(w) {
     if (!(d.getMonth()+1 in dates[d.getFullYear()])) dates[d.getFullYear()][d.getMonth()+1] = [];
     dates[d.getFullYear()][d.getMonth()+1].push(d.getDate());
   }
+  dates.min = w.files[0];
+  dates.max = w.files[w.files.length-1];
   w.dates = dates;
 }
 
@@ -604,6 +631,14 @@ function minecount_load(path) {
   });
 }
 
+function merge_count(count, a, b) {
+  if (a in count) {
+      if (!(b in count)) count[b] = 0;
+      count[b] += count[a];
+      delete count[a];
+  }
+}
+
 function adjust_count(count) {
   if (count == null) return;
   // remove piston stuff
@@ -611,17 +646,18 @@ function adjust_count(count) {
   delete count['34'];
   delete count['36'];
 
-  // furnace += burning furnace
-  if ('62' in count) {
-    count['61'] += count['62'];
-    delete count['62'];
-  }
-
-  // redstone torch on += off
-  if ('75' in count) {
-    count['76'] += count['75'];
-    delete count['75'];
-  }
+  merge_count(count, '62', '61'); // furnace += burning furnace
+  merge_count(count, '75', '76'); // redstone torch on += off
+  merge_count(count, '93', '94'); // redstone repeater on += off
+  merge_count(count, '356', '94'); // redstone repeater on += item
+  merge_count(count, '123', '124'); // redstone lamp on += off
+  merge_count(count, '55', '331'); // redstone wire += redstone
+  merge_count(count, '324', '64'); // wooden door += item
+  merge_count(count, '330', '71'); // iron door += item
+  merge_count(count, '354', '92'); // cake block += item
+  merge_count(count, '355', '26'); // bed block += item
+  merge_count(count, '379', '117'); // brewing stand block += item
+  merge_count(count, '380', '118'); // cauldron block += item
 }
 
 function minecount_show(world, file, count, prevCount) {
@@ -635,8 +671,10 @@ function minecount_show(world, file, count, prevCount) {
   var hide = worlds[world]['hide'];
   for (var i in hide) delete count[hide[i]];
   totalBlocks = 0;
-  for (var blockId in count) totalBlocks += count[blockId];
-
+  for (var blockId in count) {
+    totalBlocks += count[blockId];
+    if (isNaN(totalBlocks)) alert("nan when counting "+blockId);
+  }
   // status
   $('#status').html('A summary of blocks on <span class="highlight">' + world + '/' + file + '</span></br>from a grand total of <span class="highlight">' + totalBlocks +'</span> blocks');
 
@@ -663,6 +701,12 @@ function minecount_show(world, file, count, prevCount) {
 
   // update hash without triggering a hash change event
   document.location.hash = lastHash = '#'+world+'/'+file;
+  
+  // set min/max dates for calendar widgets
+  $('#from').datepicker( 'option', 'minDate', worlds[world].dates.min);
+  $('#to').datepicker( 'option', 'minDate', worlds[world].dates.min);
+  $('#from').datepicker( 'option', 'maxDate', worlds[world].dates.max);
+  $('#to').datepicker( 'option', 'maxDate', worlds[world].dates.max);
 }
 
 function parseMyDate(text) {

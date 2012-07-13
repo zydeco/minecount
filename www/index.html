@@ -4,14 +4,23 @@
     <head> 
         <title>Minecount</title> 
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
-        <link rel="stylesheet" href="css/reset.css" type="text/css"> 
-        <link rel="stylesheet" href="css/style.css" type="text/css"> 
-        <link rel="stylesheet" href="css/jquery.calendarPicker.css" type="text/css"> 
-        <script type="text/JavaScript" src="http://code.jquery.com/jquery-1.6.1.min.js"></script>
+        <link rel="stylesheet" href="css/reset.css" type="text/css" /> 
+        <link rel="stylesheet" href="css/style.css" type="text/css" /> 
+        <link rel="stylesheet" href="css/jquery.calendarPicker.css" type="text/css" /> 
+        <link rel="stylesheet" href="css/jquery.jqplot.min.css" type="text/css" />
+        <link rel="stylesheet" href="css/ui-lightness/jquery-ui-1.8.21.custom.css" type="text/css" />
+        <!--[if lt IE 9]><script type="text/javascript" src="js/excanvas.min.js"></script><![endif]-->
+        <script type="text/JavaScript" src="js/jquery-1.7.2.min.js"></script>
+        <script type="text/JavaScript" src="js/jquery-ui-1.8.21.custom.min.js"></script>
         <script type="text/JavaScript" src="js/jquery.calendarPicker.js"></script>
+        <script type="text/javascript" src="js/jquery.jqplot.min.js"></script>
+        <script type="text/javascript" src="js/jqplot.cursor.min.js"></script>
+        <script type="text/javascript" src="js/jqplot.highlighter.min.js"></script>
+        <script type="text/javascript" src="js/jqplot.dateAxisRenderer.min.js"></script>
         <script type="text/JavaScript" src="js/minecount.js"></script>
+        <script type="text/JavaScript" src="js/minecount_graph.js"></script>
     </head> 
-    <body> 
+    <body>
         <div id="wrapper"> 
             <div id="logo">
                 <h1>Minecount</h1>
@@ -33,5 +42,52 @@
                 <small>by <a href="http://www.danwalker.com/">Dan Walker</a> &amp; <a href="http://namedfork.net/">Jesús A. Álvarez</a> - <a href="https://github.com/zydeco/minecount">source</a></small> 
             </div><!--footer--> 
         </div><!--wrapper--> 
-    </body> 
+        
+        <div id="graph">
+            <div id="graph_ui" title="Graph Settings">
+                <script>
+                    $(function() {
+                        $('#from').datepicker({
+                            defaultDate: '+1w',
+                            changeMonth: true,
+                            changeYear: true,
+                            numberOfMonths: 1,
+                            dateFormat: 'yy-mm-dd',
+                            onSelect: function( selectedDate ) {
+                                $('#to').datepicker( 'option', 'minDate', selectedDate );
+                                update_graph(true);
+                            }
+                        });
+                        $('#to').datepicker({
+                            defaultDate: '+1w',
+                            changeMonth: true,
+                            changeYear: true,
+                            numberOfMonths: 1,
+                            dateFormat: 'yy-mm-dd',
+                            onSelect: function( selectedDate ) {
+                                $('#from').datepicker( 'option', 'maxDate', selectedDate );
+                                update_graph(true);
+                            }
+                        });
+                        $('#listfilter').keyup(function(ev) {
+                            filter_block_list($(this).val());
+                        });
+                    });
+                    </script>
+                <b>Date Range:</b><br/>
+                <input type="text" id="from" name="from" size="10" disabled/>
+                <label for="to">to</label>
+                <input type="text" id="to" name="to" size="10" disabled/>
+                <br/>
+                <br/>
+                <b>Items:</b>
+                <input type="text" id="listfilter" size="13" disabled/>
+                <br/>
+                <div id="itemlist_container">
+                    <ul id="itemlist"/>
+                </div>
+            </div>
+            <div id="graph_graph"/>
+        </div>
+    </body>
 </html>
