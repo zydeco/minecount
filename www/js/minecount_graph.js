@@ -3,7 +3,7 @@ minecount_graph_inited = 0
 function minecount_graph() {
   if (!minecount_graph_inited) {
     minecount_graph_inited = 1;
-    nonBlocks = [0, 5, 6, 17, 18, 24, 34, 35, 36, 43, 44, 55, 62, 75, 93, 98, 126, 123, 125, 263, 324, 330, 351, 354, 355, 356, 379, 380, 383, '383.1','383.2','383.10','383.11','383.12','383.13','383.14','383.15','383.20','383.21','383.40','383.41','383.200'];
+    nonBlocks = [0, 5, 6, 17, 18, 24, 34, 35, 36, 43, 44, 55, 62, 74, 75, 93, 98, 126, 123, 125, 263, 324, 330, 351, 354, 355, 356, 379, 380, 383, '383.1','383.2','383.10','383.11','383.12','383.13','383.14','383.15','383.20','383.21','383.40','383.41','383.200'];
     for (var i=0; i < nonBlocks.length; i++) nonBlocks[i] = String(nonBlocks[i]);
     var list = $('#itemlist');
     graphBlockIds = [];
@@ -85,6 +85,13 @@ function selected_blocks() {
 
 function update_graph(newData) {
   var selBlocks = selected_blocks();
+  var maxBlocks = 16;
+  
+  // cut out the last
+  if (selBlocks.length > maxBlocks) {
+    selBlocks.splice(maxBlocks, selBlocks.length-maxBlocks)
+  }
+  
   if (newData) {
     // request
     var reqParams = {from: $('#from').val(), to: $('#to').val(), blocks: selBlocks.join(','), world: selectedWorld};

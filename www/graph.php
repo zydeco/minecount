@@ -60,7 +60,8 @@ function count_for_date($date, $blocks) {
     '354'=>'92', // cake block += item
     '355'=>'26', // bed block += item
     '379'=>'117', // brewing stand block += item
-    '380'=>'118')); // cauldron block += item
+    '380'=>'118', // cauldron block += item
+    '74'=>'73')); // redstone ore += glowing
     
     // filter results
     foreach($blocks as $b) {

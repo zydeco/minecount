@@ -658,6 +658,7 @@ function adjust_count(count) {
   merge_count(count, '355', '26'); // bed block += item
   merge_count(count, '379', '117'); // brewing stand block += item
   merge_count(count, '380', '118'); // cauldron block += item
+  merge_count(count, '74', '73'); // redstone ore += glowing
 }
 
 function minecount_show(world, file, count, prevCount) {
