@@ -76,8 +76,8 @@ static inline int data_id_get_data(int i) {
 static inline int data_id_get_item(int i) {
     if (!is_data(i)) return i;
     // compare in reverse order, big ones first
-    if (i >= WDSLAB_BYDATA) return ID_SPAWNEGG;
-    if (i >= WSLAB_BYDATA) return ID_SPAWNEGG;
+    if (i >= WDSLAB_BYDATA) return ID_WDSLAB;
+    if (i >= WSLAB_BYDATA) return ID_WSLAB;
     if (i >= SPAWNEGG_BYDATA) return ID_SPAWNEGG;
     if (i >= SANDSTN_BYDATA) return ID_SANDSTONE;
     if (i >= PLANK_BYDATA) return ID_PLANK;
