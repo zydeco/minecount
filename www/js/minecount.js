@@ -206,8 +206,8 @@ blockNames = {
   "137":"Command Block",
   "138":"Beacon",
   "139":"Cobblestone Wall",
-  "131.0":"Cobblestone Wall",
-  "131.1":"Mossy Cobblestone Wall"
+  "139.0":"Cobblestone Wall",
+  "139.1":"Mossy Cobblestone Wall",
   "140":"Flower Pot",
   "141":"Carrots",
   "142":"Potatoes",
