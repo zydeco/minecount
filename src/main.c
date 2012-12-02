@@ -20,7 +20,7 @@ uint64_t * mcr_count(MCR *mcr, int mx, int mz, size_t max);
 uint64_t * mca_count(MCR *mcr, int mx, int mz, size_t max);
 
 #define ITEM_MAX BYDATA_END
-#define VERSION "1.5.3"
+#define VERSION "1.5.4"
 #define NTRIES 8
 
 // some evil globals

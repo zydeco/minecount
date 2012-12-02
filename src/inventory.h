@@ -18,7 +18,8 @@
 #define SPAWNEGG_BYDATA (BYDATA_BASE+192)
 #define WSLAB_BYDATA    (BYDATA_BASE+416)
 #define WDSLAB_BYDATA   (BYDATA_BASE+432)
-#define BYDATA_END      (BYDATA_BASE+448)
+#define COBBWALL_BYDATA (BYDATA_BASE+448)
+#define BYDATA_END      (BYDATA_BASE+464)
 
 #define ID_WOOL         35
 #define ID_DYE          351
@@ -35,6 +36,7 @@
 #define ID_SPAWNEGG     383
 #define ID_WSLAB        126
 #define ID_WDSLAB       125
+#define ID_COBBWALL     139
 
 // returns true if an item id must be stored with data too
 static inline bool has_data(int16_t item) {
@@ -54,6 +56,7 @@ static inline bool has_data(int16_t item) {
         case ID_SPAWNEGG:
         case ID_WSLAB:
         case ID_WDSLAB:
+        case ID_COBBWALL:
             return true;
         default:
             return false;
@@ -76,6 +79,7 @@ static inline int data_id_get_data(int i) {
 static inline int data_id_get_item(int i) {
     if (!is_data(i)) return i;
     // compare in reverse order, big ones first
+    if (i >= COBBWALL_BYDATA) return ID_COBBWALL;
     if (i >= WDSLAB_BYDATA) return ID_WDSLAB;
     if (i >= WSLAB_BYDATA) return ID_WSLAB;
     if (i >= SPAWNEGG_BYDATA) return ID_SPAWNEGG;
@@ -139,6 +143,9 @@ static inline int item_data_id(int16_t item, int data) {
         case ID_WDSLAB:
             data &= 7;
             return WDSLAB_BYDATA + (data < 4 ? data : 0);
+        case ID_COBBWALL:
+            data &= 1;
+            return COBBWALL_BYDATA + data;
         default:
             return item;
     }

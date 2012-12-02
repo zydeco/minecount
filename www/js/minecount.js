@@ -203,6 +203,17 @@ blockNames = {
   "134":"Spruce Wood Stairs",
   "135":"Birch Wood Stairs",
   "136":"Jungle Wood Stairs",
+  "137":"Command Block",
+  "138":"Beacon",
+  "139":"Cobblestone Wall",
+  "131.0":"Cobblestone Wall",
+  "131.1":"Mossy Cobblestone Wall"
+  "140":"Flower Pot",
+  "141":"Carrots",
+  "142":"Potatoes",
+  "143":"Wooden Button",
+  "144":"Head",
+  "145":"Anvil",
   "256":"Iron Shovel",
   "257":"Iron Pickaxe",
   "258":"Iron Axe",
@@ -374,7 +385,10 @@ blockNames = {
   "383.60":"Spawn Silverfish",
   "383.61":"Spawn Blaze",
   "383.62":"Spawn Magma Cube",
-  "383.63":"Spawn Enderdragon",
+  "383.63":"Spawn Ender Dragon",
+  "383.64":"Spawn Wither",
+  "383.65":"Spawn Bat",
+  "383.66":"Spawn Witch",
   "383.90":"Spawn Pig",
   "383.91":"Spawn Sheep",
   "383.92":"Spawn Cow",
@@ -392,6 +406,18 @@ blockNames = {
   "386":"Book and Quill",
   "387":"Written Book",
   "388":"Emerald",
+  "389":"Item Frame",
+  "390":"Flower Pot",
+  "391":"Carrot",
+  "392":"Potato",
+  "393":"Baked Potato",
+  "394":"Poisonous Potato",
+  "395":"Empty Map",
+  "396":"Golden Carrot",
+  "397":"Head",
+  "398":"Carrot on a Stick",
+  "399":"Nether Star",
+  "400":"Pumpkin Pie",
   "2256":"13 Disc",
   "2257":"Cat Disc",
   "2258":"Blocks Disc",
@@ -402,7 +428,8 @@ blockNames = {
   "2263":"Stal Disc",
   "2264":"Strad Disc",
   "2265":"Ward Disc",
-  "2266":"11 Disc"
+  "2266":"11 Disc",
+  "2267":"Wait Disc"
 };
 
 // aliases for images
@@ -415,6 +442,7 @@ blockAlias = {
     "125.2":"5.2",
     "125.3":"5.3",
     "126.0":"44.2",
+    "139.0":"139",
     "383.1":"383",
     "383.2":"383",
     "383.10":"383",
@@ -657,8 +685,14 @@ function adjust_count(count) {
   merge_count(count, '354', '92'); // cake block += item
   merge_count(count, '355', '26'); // bed block += item
   merge_count(count, '379', '117'); // brewing stand block += item
+  merge_count(count, '83', '338'); // sugar cane += block
   merge_count(count, '380', '118'); // cauldron block += item
+  merge_count(count, '372', '115'); // nether wart += item
+  merge_count(count, '397', '144'); // head += item
+  merge_count(count, '390', '140'); // flower pot += item
   merge_count(count, '74', '73'); // redstone ore += glowing
+  merge_count(count, '63', '323'); // sign post + item
+  merge_count(count, '68', '323'); // wall sign + item
 }
 
 function minecount_show(world, file, count, prevCount) {
@@ -738,6 +772,7 @@ function format_count(count) {
 
 function block_img(block, sz) {
   if (block in blockAlias) block = blockAlias[block];
+  if (block.substr(0,4) == '383.' && !(block in blockNames)) block = '383';
   return block + '_' + sz + '.png';
 }
 
