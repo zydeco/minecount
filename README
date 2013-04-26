@@ -1,5 +1,5 @@
 minecount - count blocks and items on a minecraft world
-Copyright © 2011-2012 Jesús A. Álvarez
+Copyright © 2011-2013 Jesús A. Álvarez
 
 The command line utility will count everything in a minecraft world and save
 it in a json file. Features:

@@ -159,7 +159,7 @@ void* region_count(void *data) {
 
 int print_usage() {
     fprintf(stdout, "minecount "VERSION" - count blocks and items on a minecraft world\n"
-            "Copyright (C) 2011-2012 Jesus A. Alvarez\n"
+            "Copyright (C) 2011-2013 Jesus A. Alvarez\n"
             "usage: minecount -[wciv] [-t threads] [-f find] [-b bounds] world_path output_path\n"
             "\t-w: include world blocks\n"
             "\t-c: include chest/dispenser contents\n"
