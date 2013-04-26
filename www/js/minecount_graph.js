@@ -19,6 +19,9 @@ function minecount_graph() {
       }
     }
     
+    list.append(block_list_html(-1, 0, 'all', 'All The Things'));
+    graphBlockIds.push('all');
+    
     $('#graph_ui').dialog({
       autoOpen: false,
       closeOnEscape: false,
@@ -107,7 +110,7 @@ function update_graph(newData) {
             line.push([data.dates[j], blockCount[j]])
           }
           graphData.push(line);
-          series.push({label: blockNames[blockId]});
+          series.push({label: blockId == 'all'?'All Blocks':blockNames[blockId]});
         }
         
         graphSettings = {

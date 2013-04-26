@@ -77,6 +77,7 @@ function count_for_date($date, $blocks) {
         $bcount = 0;
         if (isset($count[$b])) $bcount += $count[$b];
         if (isset($count["$b.0"])) $bcount += $count["$b.0"];
+        if ($b == 'all') $bcount = array_sum($count);
         $res[$b] = $bcount;
     }
     
