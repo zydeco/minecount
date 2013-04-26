@@ -19,7 +19,9 @@
 #define WSLAB_BYDATA    (BYDATA_BASE+416)
 #define WDSLAB_BYDATA   (BYDATA_BASE+432)
 #define COBBWALL_BYDATA (BYDATA_BASE+448)
-#define BYDATA_END      (BYDATA_BASE+464)
+#define QUARTZ_BYDATA   (BYDATA_BASE+464)
+#define CARPET_BYDATA   (BYDATA_BASE+480)
+#define BYDATA_END      (BYDATA_BASE+496)
 
 #define ID_WOOL         35
 #define ID_DYE          351
@@ -37,6 +39,8 @@
 #define ID_WSLAB        126
 #define ID_WDSLAB       125
 #define ID_COBBWALL     139
+#define ID_QUARTZ       155
+#define ID_CARPET       171
 
 // returns true if an item id must be stored with data too
 static inline bool has_data(int16_t item) {
@@ -57,6 +61,8 @@ static inline bool has_data(int16_t item) {
         case ID_WSLAB:
         case ID_WDSLAB:
         case ID_COBBWALL:
+        case ID_QUARTZ:
+        case ID_CARPET:
             return true;
         default:
             return false;
@@ -79,6 +85,8 @@ static inline int data_id_get_data(int i) {
 static inline int data_id_get_item(int i) {
     if (!is_data(i)) return i;
     // compare in reverse order, big ones first
+    if (i >= CARPET_BYDATA) return ID_CARPET;
+    if (i >= QUARTZ_BYDATA) return ID_QUARTZ;
     if (i >= COBBWALL_BYDATA) return ID_COBBWALL;
     if (i >= WDSLAB_BYDATA) return ID_WDSLAB;
     if (i >= WSLAB_BYDATA) return ID_WSLAB;
@@ -116,10 +124,9 @@ static inline int item_data_id(int16_t item, int data) {
             return SAPLING_BYDATA + (data < 4 ? data : 0);
         case ID_SLAB:
             data &= 7;
-            return SLAB_BYDATA + (data < 6 ? data : 0);
+            return SLAB_BYDATA + data;
         case ID_DSLAB:
-            data &= 7;
-            return DSLAB_BYDATA + (data < 6 ? data : 0);
+            return DSLAB_BYDATA + data;
         case ID_TALL_GRASS:
             data &= 3;
             return GRASS_BYDATA + (data < 3 ? data : 0);
@@ -146,6 +153,10 @@ static inline int item_data_id(int16_t item, int data) {
         case ID_COBBWALL:
             data &= 1;
             return COBBWALL_BYDATA + data;
+        case ID_QUARTZ:
+            return QUARTZ_BYDATA + (data < 3 ? data : 2);
+        case ID_CARPET:
+            return CARPET_BYDATA + data;
         default:
             return item;
     }

@@ -3,7 +3,7 @@ minecount_graph_inited = 0
 function minecount_graph() {
   if (!minecount_graph_inited) {
     minecount_graph_inited = 1;
-    nonBlocks = [0, 5, 6, 17, 18, 24, 34, 35, 36, 43, 44, 55, 62, 74, 75, 93, 98, 126, 123, 125, 263, 324, 330, 351, 354, 355, 356, 379, 380, 383, '383.1','383.2','383.10','383.11','383.12','383.13','383.14','383.15','383.20','383.21','383.40','383.41','383.200'];
+    nonBlocks = [0, 5, 6, 17, 18, 24, 34, 35, 36, 43, 44, 55, 62, 63, 68, 74, 75, 83, 93, 98, 126, 123, 125, 149, 171, 263, 324, 330, 351, 354, 355, 356, 372, 379, 380, 383, 390, 397, 404];
     for (var i=0; i < nonBlocks.length; i++) nonBlocks[i] = String(nonBlocks[i]);
     var list = $('#itemlist');
     graphBlockIds = [];
@@ -64,9 +64,9 @@ function block_list_id(blockId, blockVal) {
 }
 
 function block_list_html(blockId, blockVal, blockIdName, blockName) {
-  var imgSize = (blockId < 256 || blockId == 383)?18:16;
+  var imgSize = (blockId < 256)?18:16;
   var imgName = (blockIdName in blockAlias)?blockAlias[blockIdName]:blockIdName;
-  return $('<li><input type="checkbox" id="chk_'+blockIdName.replace('.','_')+'"/><img src="images/blocks/'+imgName+'_s.png" width="'+imgSize+'" height="'+imgSize+'"/> '+blockName+'</li>');
+  return $('<li><input type="checkbox" id="chk_'+blockIdName.replace('.','_')+'"/><img src="images/blocks/'+imgName+'_s.png" width="'+imgSize+'"/> '+blockName+'</li>');
 }
 
 function uncheck_all_blocks() {

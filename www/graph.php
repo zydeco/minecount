@@ -60,8 +60,17 @@ function count_for_date($date, $blocks) {
     '354'=>'92', // cake block += item
     '355'=>'26', // bed block += item
     '379'=>'117', // brewing stand block += item
+    '83'=>'338', // sugar cane += block
     '380'=>'118', // cauldron block += item
-    '74'=>'73')); // redstone ore += glowing
+    '372'=>'115', // nether wart += item
+    '397'=>'144', // head += item
+    '390'=>'140', // flower pot += item
+    '74'=>'73', // redstone ore += glowing
+    '63'=>'323', // sign post + item
+    '68'=>'323', // wall sign + item
+    '149'=>'150', // redstone comparator on += off
+    '404'=>'150', // redstone comparator block += item
+    )); 
     
     // filter results
     foreach($blocks as $b) {
