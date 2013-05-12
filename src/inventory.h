@@ -21,7 +21,8 @@
 #define COBBWALL_BYDATA (BYDATA_BASE+448)
 #define QUARTZ_BYDATA   (BYDATA_BASE+464)
 #define CARPET_BYDATA   (BYDATA_BASE+480)
-#define BYDATA_END      (BYDATA_BASE+496)
+#define SCLAY_BYDATA    (BYDATA_BASE+496)
+#define BYDATA_END      (BYDATA_BASE+512)
 
 #define ID_WOOL         35
 #define ID_DYE          351
@@ -41,6 +42,7 @@
 #define ID_COBBWALL     139
 #define ID_QUARTZ       155
 #define ID_CARPET       171
+#define ID_SCLAY        159
 
 // returns true if an item id must be stored with data too
 static inline bool has_data(int16_t item) {
@@ -63,6 +65,7 @@ static inline bool has_data(int16_t item) {
         case ID_COBBWALL:
         case ID_QUARTZ:
         case ID_CARPET:
+        case ID_SCLAY:
             return true;
         default:
             return false;
@@ -85,6 +88,7 @@ static inline int data_id_get_data(int i) {
 static inline int data_id_get_item(int i) {
     if (!is_data(i)) return i;
     // compare in reverse order, big ones first
+    if (i >= SCLAY_BYDATA) return ID_SCLAY;
     if (i >= CARPET_BYDATA) return ID_CARPET;
     if (i >= QUARTZ_BYDATA) return ID_QUARTZ;
     if (i >= COBBWALL_BYDATA) return ID_COBBWALL;
@@ -157,6 +161,8 @@ static inline int item_data_id(int16_t item, int data) {
             return QUARTZ_BYDATA + (data < 3 ? data : 2);
         case ID_CARPET:
             return CARPET_BYDATA + data;
+        case ID_SCLAY:
+            return SCLAY_BYDATA + data;
         default:
             return item;
     }

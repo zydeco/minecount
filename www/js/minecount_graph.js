@@ -3,7 +3,7 @@ minecount_graph_inited = 0
 function minecount_graph() {
   if (!minecount_graph_inited) {
     minecount_graph_inited = 1;
-    nonBlocks = [0, 5, 6, 17, 18, 24, 34, 35, 36, 43, 44, 55, 62, 63, 68, 74, 75, 83, 93, 98, 126, 123, 125, 149, 171, 263, 324, 330, 351, 354, 355, 356, 372, 379, 380, 383, 390, 397, 404];
+    nonBlocks = [0, 5, 6, 17, 18, 24, 34, 35, 36, 43, 44, 55, 62, 63, 68, 74, 75, 83, 93, 98, 126, 123, 125, 149, 159, 171, 263, 324, 330, 351, 354, 355, 356, 372, 379, 380, 383, 390, 397, 404];
     for (var i=0; i < nonBlocks.length; i++) nonBlocks[i] = String(nonBlocks[i]);
     var list = $('#itemlist');
     graphBlockIds = [];
