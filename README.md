@@ -1,5 +1,5 @@
-minecount - count blocks and items on a minecraft world
-Copyright © 2011-2013 Jesús A. Álvarez
+# minecount - count blocks and items on a minecraft world
+_Copyright © 2011-2013 Jesús A. Álvarez_
 
 The command line utility will count everything in a minecraft world and save
 it in a json file. Features:
@@ -10,6 +10,7 @@ it in a json file. Features:
  * Cross platform (tested on Mac OS X, Linux and Windows)
 
 usage: minecount -[wciv] [-t threads] [-f find] [-b bounds] world output
+```
  -w: include world blocks
  -c: include chest/dispenser contents
  -i: include player inventories
@@ -17,7 +18,7 @@ usage: minecount -[wciv] [-t threads] [-f find] [-b bounds] world output
  -t threads: number of threads to run (defaults to the number of CPU cores)
  -f 1,2,3: find items and report their position
  -b x,y,z x,y,z: count only in specified bounds
-
+```
 The web interface will display the results in a webpage, including the 
 difference in blocks from the previous day. It is designed to keep daily count
 of more than one world, with the json files in count/<world>/<yyyy-mm-dd>, and
